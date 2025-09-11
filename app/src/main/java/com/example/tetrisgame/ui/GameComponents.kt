@@ -50,13 +50,11 @@ private fun DrawScope.drawTetrisBoard(gameState: TetrisGameState, cellSize: Floa
     val boardWidth = cellSize * BOARD_WIDTH
     val boardHeight = cellSize * BOARD_HEIGHT
 
-    // Draw background
     drawRect(
         color = Color(0xFF0A0A0A),
         size = Size(boardWidth, boardHeight)
     )
 
-    // Draw grid lines
     for (i in 0..BOARD_WIDTH) {
         drawLine(
             color = Color.Gray.copy(alpha = 0.3f),
@@ -142,7 +140,6 @@ private fun DrawScope.drawCell(
     val cellSize = size - margin * 2
 
     if (isGhost) {
-        // Draw ghost cell with border only
         drawRect(
             color = Color.Transparent,
             topLeft = Offset(x + margin, y + margin),
@@ -335,7 +332,6 @@ fun GameControls(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Rotate and Hard Drop row
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -356,7 +352,6 @@ fun GameControls(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Movement controls
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -384,7 +379,6 @@ fun GameControls(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Pause button
         GameButton(
             onClick = onPause,
             icon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Clear,

@@ -179,7 +179,6 @@ data class GameBoard(
             }
         }
 
-        // Add empty lines at the top
         repeat(clearedLines) {
             newCells.add(0, List(BOARD_WIDTH) { null })
         }
@@ -188,7 +187,6 @@ data class GameBoard(
     }
 }
 
-// Game state
 data class TetrisGameState(
     val board: GameBoard = GameBoard(),
     val currentPiece: GamePiece? = null,
@@ -200,7 +198,6 @@ data class TetrisGameState(
     val isPaused: Boolean = false
 ) {
     fun calculateDropSpeed(): Long {
-        // Speed increases with level (milliseconds)
         return maxOf(50, 1000 - (level - 1) * 100).toLong()
     }
 }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.delay
 import kotlin.math.sin
 import kotlin.random.Random
 
-// Data classes for animated effects
 data class MatrixDrop(
     var x: Float,
     var y: Float,
@@ -30,14 +29,12 @@ data class Particle(
     var size: Float
 )
 
-// Animation state holder
 @Composable
 fun rememberAnimationState(): AnimationState {
     val animationTime = remember { mutableFloatStateOf(0f) }
     val matrixDrops = remember { mutableStateOf(generateMatrixDrops()) }
     val particles = remember { mutableStateOf(generateParticles()) }
 
-    // Animation loop
     LaunchedEffect(Unit) {
         while (true) {
             delay(50) // 20 FPS
@@ -130,7 +127,6 @@ private fun DrawScope.drawAnimatedBackground(
         size = size
     )
 
-    // Draw floating particles with pulsing effect
     particles.forEach { particle ->
         val pulseFactor = (sin(time * 2f + particle.x * 0.01f) + 1f) / 2f
         drawCircle(
@@ -147,20 +143,17 @@ private fun DrawScope.drawAnimatedBackground(
         )
     }
 
-    // Draw matrix rain effect as simple rectangles (representing characters)
     matrixDrops.forEach { drop ->
         val dropAlpha = (drop.alpha * 0.6f + 0.15f).coerceIn(0f, 1f)
         val dropWidth = 8f
         val dropHeight = 12f
 
-        // Main character block
         drawRect(
             color = Color.Green.copy(alpha = dropAlpha),
             topLeft = Offset((drop.x % width) - dropWidth / 2, (drop.y % height) - dropHeight / 2),
             size = Size(dropWidth, dropHeight)
         )
 
-        // Glow effect
         drawRect(
             color = Color.Green.copy(alpha = dropAlpha * 0.3f),
             topLeft = Offset((drop.x % width) - dropWidth, (drop.y % height) - dropHeight),

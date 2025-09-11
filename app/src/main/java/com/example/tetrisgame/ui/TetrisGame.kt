@@ -16,12 +16,10 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
     var gameState by remember { mutableStateOf(TetrisGameState()) }
     val engine = remember { TetrisEngine() }
 
-    // Initialize game with first piece
     LaunchedEffect(Unit) {
         gameState = engine.spawnNewPiece(gameState)
     }
 
-    // Game loop - automatic piece dropping
     LaunchedEffect(gameState.isPaused, gameState.isGameOver) {
         while (!gameState.isPaused && !gameState.isGameOver && gameState.currentPiece != null) {
             delay(gameState.calculateDropSpeed())
@@ -30,7 +28,6 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Animated background
         AnimatedBackground(modifier = Modifier.fillMaxSize())
 
         Column(
@@ -40,7 +37,6 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top section - Score and Next piece
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -61,7 +57,6 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Game board
             TetrisBoard(
                 gameState = gameState,
                 modifier = Modifier.wrapContentSize()
@@ -69,7 +64,6 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Game controls
             GameControls(
                 onMoveLeft = {
                     if (!gameState.isPaused) {
@@ -101,20 +95,8 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
                 },
                 isPaused = gameState.isPaused
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Back to menu button
-            Button(
-                onClick = onBackToMenu,
-                modifier = Modifier.fillMaxWidth(0.5f),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-            ) {
-                Text("BACK TO MENU", color = Color.White)
-            }
         }
 
-        // Game Over Dialog
         GameOverDialog(
             gameState = gameState,
             onRestart = {
@@ -124,7 +106,6 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
             onBackToMenu = onBackToMenu
         )
 
-        // Pause overlay
         if (gameState.isPaused && !gameState.isGameOver) {
             Box(
                 modifier = Modifier
