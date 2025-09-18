@@ -1,0 +1,3 @@
+# Placeholder for line clear sound
+# Replace this file with an actual .wav or .ogg audio file
+# This should be a satisfying sound when lines are cleared

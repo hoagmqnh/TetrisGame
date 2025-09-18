@@ -325,7 +325,9 @@ fun GameControls(
     onRotate: () -> Unit,
     onHardDrop: () -> Unit,
     onPause: () -> Unit,
+    onToggleSound: () -> Unit,
     isPaused: Boolean,
+    isSoundOn: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -379,13 +381,25 @@ fun GameControls(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        GameButton(
-            onClick = onPause,
-            icon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Clear,
-            color = Color(0xFFFF9800),
-            label = if (isPaused) "RESUME" else "PAUSE",
-            modifier = Modifier.width(120.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            GameButton(
+                onClick = onPause,
+                icon = if (isPaused) Icons.Default.PlayArrow else Icons.Default.Clear,
+                color = Color(0xFFFF9800),
+                label = if (isPaused) "RESUME" else "PAUSE",
+                modifier = Modifier.width(120.dp)
+            )
+
+            GameButton(
+                onClick = onToggleSound,
+                icon = if (isSoundOn) Icons.Default.VolumeUp else Icons.Default.VolumeOff,
+                color = Color(0xFF9C27B0),
+                label = if (isSoundOn) "SOUND" else "MUTE",
+                modifier = Modifier.width(120.dp)
+            )
+        }
     }
 }
 

@@ -6,7 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.example.tetrisgame.audio.SoundManager
 import com.example.tetrisgame.game.TetrisEngine
 import com.example.tetrisgame.game.TetrisGameState
 import kotlinx.coroutines.delay
@@ -14,10 +16,19 @@ import kotlinx.coroutines.delay
 @Composable
 fun TetrisGame(onBackToMenu: () -> Unit) {
     var gameState by remember { mutableStateOf(TetrisGameState()) }
-    val engine = remember { TetrisEngine() }
+    val context = LocalContext.current
+    val soundManager = remember { SoundManager(context) }
+    val engine = remember { TetrisEngine(soundManager) }
 
     LaunchedEffect(Unit) {
         gameState = engine.spawnNewPiece(gameState)
+    }
+
+    // Cleanup sound manager when composable is disposed
+    DisposableEffect(Unit) {
+        onDispose {
+            soundManager.release()
+        }
     }
 
     LaunchedEffect(gameState.isPaused, gameState.isGameOver) {
@@ -93,7 +104,11 @@ fun TetrisGame(onBackToMenu: () -> Unit) {
                 onPause = {
                     gameState = engine.togglePause(gameState)
                 },
-                isPaused = gameState.isPaused
+                onToggleSound = {
+                    soundManager.toggleSound()
+                },
+                isPaused = gameState.isPaused,
+                isSoundOn = soundManager.isSoundOn()
             )
         }
 

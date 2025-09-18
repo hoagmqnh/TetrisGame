@@ -1,8 +1,9 @@
 package com.example.tetrisgame.game
 
+import com.example.tetrisgame.audio.SoundManager
 import kotlin.random.Random
 
-class TetrisEngine {
+class TetrisEngine(private val soundManager: SoundManager? = null) {
 
     fun spawnNewPiece(gameState: TetrisGameState): TetrisGameState {
         val currentPiece = gameState.nextPiece ?: getRandomTetromino()
@@ -16,6 +17,11 @@ class TetrisEngine {
 
         // Check if game is over
         val isGameOver = !gameState.board.isValidPosition(newPiece)
+
+        // Play game over sound if game is over and it wasn't over before
+        if (isGameOver && !gameState.isGameOver) {
+            soundManager?.playGameOver()
+        }
 
         return gameState.copy(
             currentPiece = if (isGameOver) null else newPiece,
@@ -103,11 +109,19 @@ class TetrisEngine {
     private fun placePieceAndContinue(gameState: TetrisGameState): TetrisGameState {
         val piece = gameState.currentPiece ?: return gameState
 
+        // Play block landing sound
+        soundManager?.playBlockLand()
+
         // Place piece on board
         val newBoard = gameState.board.placePiece(piece)
 
         // Clear completed lines
         val (clearedBoard, linesCleared) = newBoard.clearLines()
+
+        // Play line clear sound if lines were cleared
+        if (linesCleared > 0) {
+            soundManager?.playLineClear()
+        }
 
         // Calculate score
         val lineScore = calculateLineScore(linesCleared, gameState.level)
